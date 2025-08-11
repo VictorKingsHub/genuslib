@@ -1,136 +1,154 @@
-// app/login/page.tsx
-'use client'; // This makes it a Client Component as it will have interactive elements
-
+"use client"
 import { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+// import Image from 'next/image';
+import { HiUser, HiMail, HiPhone, HiLockClosed } from 'react-icons/hi';
+import { FaGoogle, FaFacebookF } from 'react-icons/fa';
 
-export default function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const SignupPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  interface FormData {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData: FormData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
-
-    // Basic validation (you'd replace this with actual authentication logic)
-    if (!username || !password) {
-      setError('Please enter both username and password.');
-      return;
-    }
-
-    // Simulate API call for login
-    try {
-      // In a real application, you'd send credentials to your backend API
-      // const response = await fetch('/api/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ username, password }),
-      // });
-
-      // const data = await response.json();
-
-      // if (response.ok) {
-      //   console.log('Login successful:', data);
-      //   // Redirect to dashboard or home page
-      //   // router.push('/dashboard');
-      // } else {
-      //   setError(data.message || 'Login failed. Please check your credentials.');
-      // }
-      
-      console.log('Attempting login with:', { username, password });
-      // For demonstration, assume successful login
-      alert('Login successful! (This is a demo)');
-      // You would typically redirect here
-      // window.location.href = '/dashboard'; 
-
-    } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
-      console.error('Login error:', err);
-    }
+    console.log('Form submitted:', formData);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-        <div className="flex justify-center mb-6">
-          {/* Replace with your actual logo/image. 
-              Make sure to put your image file in the 'public' directory, e.g., /public/your-logo.png
-              Adjust width and height as needed based on your logo's dimensions.
-          */}
-          <Image 
-            src="/user-icon.png" // Placeholder image. Change this!
-            alt="User Icon" 
-            width={80} 
-            height={80} 
-            className="rounded-full"
-          />
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl max-w-5xl w-full overflow-hidden">
+
+        <div className="hidden md:flex flex-col items-center justify-center w-full md:w-1/2 p-10 bg-blue-600 relative">
+          {/* Using a placeholder for the image. You can replace this with your own image. */}
+          {/* <Image
+            src="st.png"
+            alt="Student studying on a laptop"
+            width={600}
+            height={400}
+            className="w-full h-auto rounded-lg"
+          /> */}
         </div>
-        
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Login</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              User
-            </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              autoComplete="username"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter your username"
-            />
-          </div>
+        {/* Right side: Signup form section. */}
+        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+          <h2 className="text-3xl font-bold text-gray-800 text-center">Student Signup</h2>
+          <p className="mt-2 text-gray-600 text-center text-sm">
+            Hey enter your details to create your account
+          </p>
 
-          <div>
-            <div className="flex justify-between items-center">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <Link href="/forgot-password" className="text-sm text-indigo-600 hover:text-indigo-500">
-                Forgot?
-              </Link>
+          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+
+            {/* Name Input Field */}
+            <div className="relative">
+              <HiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your Name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
             </div>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter your password"
-            />
-          </div>
 
-          {error && (
-            <p className="text-sm text-red-600 text-center">{error}</p>
-          )}
+            {/* Email Input Field */}
+            <div className="relative">
+              <HiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your Email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
 
-          <div>
+            {/* Phone Input Field */}
+            <div className="relative">
+              <HiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Enter your Phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            {/* Password Input Field */}
+            <div className="relative">
+              <HiLockClosed className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="password"
+                name="password"
+                placeholder="Create Password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            {/* Sign Up Button */}
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full py-3 mt-6 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition duration-300"
             >
-              Continue
+              Sign up
+            </button>
+          </form>
+
+          {/* Social Login Options */}
+          <div className="flex items-center my-6">
+            <hr className="flex-grow border-gray-300" />
+            <span className="mx-4 text-gray-500 text-sm">Or Signup with</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          <div className="flex space-x-4">
+            <button className="flex-1 flex items-center justify-center p-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">
+              <FaGoogle className="mr-2" /> Google
+            </button>
+            <button className="flex-1 flex items-center justify-center p-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">
+              <FaFacebookF className="mr-2" /> Facebook
             </button>
           </div>
-        </form>
 
-        <p className="mt-8 text-center text-sm text-gray-600">
-          Don&apos;t have an account yet?{' '}
-          <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-            Register
-          </Link>
-        </p>
+          {/* Login Link */}
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Already have an account?{' '}
+            <a href="#" className="font-semibold text-blue-600 hover:underline">
+              Sign in
+            </a>
+          </p>
+        </div>
+
       </div>
     </div>
   );
-}
+};
+
+export default SignupPage;
